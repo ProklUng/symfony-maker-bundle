@@ -16,12 +16,13 @@
    - `config_file_dir` - путь к папке, где лежит конфигурационный файл бандлов (bundles.php в терминах Symfony).
      По умолчанию - `/local/configs/` 
    - `config_file` - Имя конфигурационного файла бандлов (по умолчанию - `standalone_bundles.php` )
+   - `namespace` - Пространство имен бандла. По умолчанию -  `Local\Bundles`.
 
 ### Использование
 
 `php bin/console maker:make-bundle TestBundle`
 
-Где TestBundle - название бандла.
+Где `TestBundle` - название бандла.
 
 По завершению команда пропишет созданный бандл в `/local/configs/standalone_bundles.php`.
 Если это не требуется, то нужно запускать команду с ключом `--init=false`. 

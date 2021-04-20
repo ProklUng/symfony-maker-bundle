@@ -8,11 +8,6 @@ namespace Prokl\BundleMakerBundle\Services;
  */
 class CreateBundleService
 {
-    /**
-     * @const string NAMESPACE_BUNDLES Пространство имен бандлов.
-     */
-    private const NAMESPACE_BUNDLES = 'Local\\Bundles\\';
-
     public const RESOURCE_DIR = '/Resources/config';
     public const DEPENDENCY_DIR = '/DependencyInjection';
 
@@ -35,6 +30,11 @@ class CreateBundleService
      */
     private $configFileName;
 
+    /**
+     * @var string $nameBundleConfigFile Namespace of bundle.
+     */
+    private $bundleNamespace;
+
     /** @var integer */
     private $dirMode;
 
@@ -53,18 +53,20 @@ class CreateBundleService
     /**
      * @see https://php.net/mkdir for file modes
      *
-     * @param string  $bundleName    Name of the new bundle (PascalCase).
-     * @param string  $workingDir    The directory the bundle resides in.
-     * @param string  $configFileDir Path to config file.
-     * @param string  $configFile    Name of config file.
-     * @param integer $dirMode       The file mode of the to be created directories.
-     * @param array   $templateFiles Array of template file paths.
+     * @param string  $bundleName      Name of the new bundle (PascalCase).
+     * @param string  $workingDir      The directory the bundle resides in.
+     * @param string  $configFileDir   Path to config file.
+     * @param string  $configFile      Name of config file.
+     * @param string  $bundleNamespace Bundle namespace.
+     * @param integer $dirMode         The file mode of the to be created directories.
+     * @param array   $templateFiles   Array of template file paths.
      */
     public function __construct(
         string $bundleName,
         string $workingDir,
         string $configFileDir,
         string $configFile,
+        string $bundleNamespace,
         int $dirMode = 0755,
         array $templateFiles = []
     ) {
@@ -74,6 +76,7 @@ class CreateBundleService
         $this->templateFiles = $templateFiles;
         $this->configFileDir = $configFileDir;
         $this->configFileName = $configFile;
+        $this->bundleNamespace = $bundleNamespace;
     }
 
     /**
@@ -152,7 +155,7 @@ class CreateBundleService
      */
     public function activateBundle(): bool
     {
-        $className = self::NAMESPACE_BUNDLES . $this->bundleName . '\\' . $this->bundleName;
+        $className = $this->bundleNamespace . $this->bundleName . '\\' . $this->bundleName;
         $bundlePhp = getcwd() . $this->configFileDir . $this->configFileName;
         $backUp = getcwd() . $this->configFileDir . $this->configFileName . '.backup';
 

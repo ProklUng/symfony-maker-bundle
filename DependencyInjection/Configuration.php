@@ -36,6 +36,10 @@ class Configuration implements ConfigurationInterface
                     ->info('Name of bundles config file. Default: standalone_bundles.php')
                     ->defaultValue('standalone_bundles.php')
                 ->end()
+                ->scalarNode('namespace')
+                    ->info('Namespace of bundle. Default: Local\\Bundles\\')
+                    ->defaultValue('Local\\Bundles\\')
+                ->end()
             ->end()
         ;
         return $treeBuilder;

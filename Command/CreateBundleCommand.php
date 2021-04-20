@@ -49,8 +49,13 @@ class CreateBundleCommand extends Command
      */
     private $nameBundleConfigFile;
 
+    /**
+     * @var string $nameBundleConfigFile Namespace of bundle.
+     */
+    private $bundleNamespace;
+
     /** @var array $configKeys */
-    private $configKeys = ['template_dir', 'bundle_dir', 'config_file_dir', 'config_file'];
+    private $configKeys = ['template_dir', 'bundle_dir', 'config_file_dir', 'config_file', 'namespace'];
 
     /** @var array $config */
     private $config = [];
@@ -70,6 +75,8 @@ class CreateBundleCommand extends Command
         $this->pathDirBundles = $this->config['bundle_dir'];
         $this->pathStandaloneBundle = (string)$this->config['config_file_dir'];
         $this->nameBundleConfigFile = (string)$this->config['config_file'];
+        $this->bundleNamespace = (string)$this->config['namespace'];
+
         $this->setTemplates();
     }
 
@@ -120,6 +127,7 @@ class CreateBundleCommand extends Command
             $workingDir,
             $this->pathStandaloneBundle,
             $this->nameBundleConfigFile,
+            $this->bundleNamespace,
             $srcPerms,
             $this->templateFiles
         );
