@@ -1,0 +1,12 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: true
+
+  maker_bundle.command.create_bundle_command:
+    class: Prokl\BundleMakerBundle\Command\CreateBundleCommand
+    arguments:
+      - []
+    tags:
+      - { name: console.command }

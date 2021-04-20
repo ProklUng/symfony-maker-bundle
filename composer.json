@@ -1,0 +1,32 @@
+{
+    "name": "proklung/symfony-maker-bundle",
+    "description": "Symfony bundle for generation skeleton of bundles.",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gavrilov Fedy",
+            "email": "fedor.gavrilov.75@mail.ru",
+            "homepage": "https://github.com/ProklUng"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/ProklUng/symfony-maker-bundle/issues",
+        "source": "https://github.com/ProklUng/symfony-maker-bundle"
+    },
+    "autoload": {
+        "psr-4": {
+            "Prokl\\BundleMakerBundle\\": ""
+        },
+        "exclude-from-classmap": [
+            "Tests/"
+        ]
+    },
+    "require": {
+        "php": ">=7.1",
+        "psr/container": "^1.0",
+        "symfony/dependency-injection": "^4.0 || ^5.0",
+        "symfony/http-kernel": "^4.0 || ^5.0",
+        "symfony/console": "~4|~5"
+    }
+}
