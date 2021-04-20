@@ -39,8 +39,18 @@ class CreateBundleCommand extends Command
         'routes'  => 'routes.yaml'
     ];
 
+    /**
+     * @var string $pathStandaloneBundle
+     */
+    private $pathStandaloneBundle;
+
+    /**
+     * @var string $nameBundleConfigFile
+     */
+    private $nameBundleConfigFile;
+
     /** @var array $configKeys */
-    private $configKeys = ['template_dir', 'bundle_dir'];
+    private $configKeys = ['template_dir', 'bundle_dir', 'config_file_dir', 'config_file'];
 
     /** @var array $config */
     private $config = [];
@@ -58,6 +68,8 @@ class CreateBundleCommand extends Command
 
         $this->setConfig($config);
         $this->pathDirBundles = $this->config['bundle_dir'];
+        $this->pathStandaloneBundle = (string)$this->config['config_file_dir'];
+        $this->nameBundleConfigFile = (string)$this->config['config_file'];
         $this->setTemplates();
     }
 
@@ -106,6 +118,8 @@ class CreateBundleCommand extends Command
         $service = new CreateBundleService(
             $bundleName,
             $workingDir,
+            $this->pathStandaloneBundle,
+            $this->nameBundleConfigFile,
             $srcPerms,
             $this->templateFiles
         );

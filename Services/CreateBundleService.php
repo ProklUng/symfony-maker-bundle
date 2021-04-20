@@ -9,33 +9,33 @@ namespace Prokl\BundleMakerBundle\Services;
 class CreateBundleService
 {
     /**
-     * @const string PATH_BUNDLES_CONFIG Путь к файлу с конфигурациями бандлов.
-     */
-    private const PATH_BUNDLES_CONFIG_FILE = '/local/configs/standalone_bundles.php';
-
-    /**
-     * @const string PATH_BUNDLES_CONFIG_DIR Путь к директории с конфигурациями бандлов.
-     */
-    private const PATH_BUNDLES_CONFIG_DIR = '/local/configs';
-
-    /**
      * @const string NAMESPACE_BUNDLES Пространство имен бандлов.
      */
     private const NAMESPACE_BUNDLES = 'Local\\Bundles\\';
 
-    public const RESSOURCE_DIR = '/Resources/config';
+    public const RESOURCE_DIR = '/Resources/config';
     public const DEPENDENCY_DIR = '/DependencyInjection';
 
     /** @var string[]  */
     private $otherDirs = ['/Controller', '/Services', '/Tests'];
 
     /** @var string */
-    private $ressourcesDir = '/Resources/config';
+    private $resourcesDir = '/Resources/config';
 
     /** @var string */
     private $dependencyDir = '/DependencyInjection';
 
-    /** @var int */
+    /**
+     * @var string $configFileDir Path to configs.
+     */
+    private $configFileDir;
+
+    /**
+     * @var string $configFileName Name of bundles config file.
+     */
+    private $configFileName;
+
+    /** @var integer */
     private $dirMode;
 
     /** @var string */
@@ -53,14 +53,18 @@ class CreateBundleService
     /**
      * @see https://php.net/mkdir for file modes
      *
-     * @param string  $bundleName    Name of the new bundle (PascalCase)
-     * @param string  $workingDir    The directory the bundle resides in
-     * @param integer $dirMode       The file mode of the to be created directories
-     * @param array   $templateFiles Array of template file paths
+     * @param string  $bundleName    Name of the new bundle (PascalCase).
+     * @param string  $workingDir    The directory the bundle resides in.
+     * @param string  $configFileDir Path to config file.
+     * @param string  $configFile    Name of config file.
+     * @param integer $dirMode       The file mode of the to be created directories.
+     * @param array   $templateFiles Array of template file paths.
      */
     public function __construct(
         string $bundleName,
         string $workingDir,
+        string $configFileDir,
+        string $configFile,
         int $dirMode = 0755,
         array $templateFiles = []
     ) {
@@ -68,6 +72,8 @@ class CreateBundleService
         $this->workingDir = $workingDir;
         $this->dirMode = $dirMode;
         $this->templateFiles = $templateFiles;
+        $this->configFileDir = $configFileDir;
+        $this->configFileName = $configFile;
     }
 
     /**
@@ -78,11 +84,11 @@ class CreateBundleService
         if (true !== $this->createDir($this->workingDir)) {
             return false;
         }
-        $resDir = $this->workingDir . self::RESSOURCE_DIR;
+        $resDir = $this->workingDir . self::RESOURCE_DIR;
         if (true !== $this->createDir($resDir)) {
             return false;
         }
-        $this->ressourcesDir = $resDir;
+        $this->resourcesDir = $resDir;
         $depDir = $this->workingDir . self::DEPENDENCY_DIR;
         if (true !== $this->createDir($depDir)) {
             return false;
@@ -104,9 +110,9 @@ class CreateBundleService
     {
         foreach ($this->templateFiles as $key => $template) {
             if ($key === 'services' || $key === 'routes') {
-                $dest = $this->ressourcesDir . "/$key.yaml";
+                $dest = $this->resourcesDir . "/$key.yaml";
                 if (true !== copy($template, $dest)) {
-                    $this->errMsg = 'Cannot copy ' . $key . '.yaml to  ' . $this->ressourcesDir;
+                    $this->errMsg = 'Cannot copy ' . $key . '.yaml to  ' . $this->resourcesDir;
                     return false;
                 }
             }
@@ -147,11 +153,11 @@ class CreateBundleService
     public function activateBundle(): bool
     {
         $className = self::NAMESPACE_BUNDLES . $this->bundleName . '\\' . $this->bundleName;
-        $bundlePhp = getcwd() . self::PATH_BUNDLES_CONFIG_FILE;
-        $backUp = getcwd() . self::PATH_BUNDLES_CONFIG_FILE . '.backup';
+        $bundlePhp = getcwd() . $this->configFileDir . $this->configFileName;
+        $backUp = getcwd() . $this->configFileDir . $this->configFileName . '.backup';
 
         /** Директория, в которой лежат конфигурации бандлов. */
-        $configDir = getcwd() . self::PATH_BUNDLES_CONFIG_DIR;
+        $configDir = getcwd() . $this->configFileDir;
 
         if (!is_dir($configDir)) {
             $this->errMsg = 'Cannot find directory ' . $configDir;
